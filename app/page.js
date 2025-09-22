@@ -1,14 +1,98 @@
 'use client'
 import styles from "./page.module.css";
 import useGameManager from "@/hooks/gameManager";
-
+import Image from "next/image"; // Importe o componente Image do Next.js
 
 export default function Home() {
-    const {heroi, vilao, log, turnoHeroi, handlerAcaoHeroi} = useGameManager();
-  return (
-    <div className={styles.page}>
-        <span>Heroi: {heroi.nome}</span>
-        <span>Vilão: {vilao.nome}</span>
-    </div>
-  );
+    const {heroi, vilao, log, turnoHeroi, handlerAcaoHeroi, gameOver, vencedor} = useGameManager();
+
+    return (
+        <div className={styles.containerPrincipal}>
+            {/* Área Superior: Informações dos Combatentes */}
+            <div className={styles.areaCombate}>
+                {/* Imagem do Vilão */}
+                <div className={styles.imagemVilao}>
+                    {/* Exemplo: hitmontop.png para o vilão */}
+                    <Image
+                        src="/personagens/Conkeldurr_XY.webp"
+                        alt={vilao.nome}
+                        width={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
+                        height={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
+                        priority // Opcional: para carregar mais rápido, útil para imagens acima da dobra
+                    />
+                </div>
+
+                {/* Informações do Vilão */}
+                <div className={styles.painelVilao}>
+                    <div className={styles.infoPersonagem}>
+                        <span className={styles.nomePersonagem}>{vilao.nome}</span>
+                        <div className={styles.barraVidaExterna}>
+                            <div
+                                className={styles.barraVidaInterna}
+                                style={{width: `${vilao.vida > 0 ? vilao.vida : 0}%`}}
+                            ></div>
+                        </div>
+                        <span className={styles.vidaNumerica}>HP: {vilao.vida > 0 ? vilao.vida : 0}/100</span>
+                    </div>
+                </div>
+
+                {/* Imagem do Herói */}
+                <div className={styles.imagemHeroi}>
+                    {/* Exemplo: machoke.png para o herói */}
+                    <Image
+                        src="/personagens/Machamp_XY_back.webp"
+                        alt={heroi.nome}
+                        width={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
+                        height={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
+                        priority
+                    />
+                </div>
+
+                {/* Informações do Herói */}
+                <div className={styles.painelHeroi}>
+                    <div className={styles.infoPersonagem}>
+                        <span className={styles.nomePersonagem}>{heroi.nome}</span>
+                        <div className={styles.barraVidaExterna}>
+                            <div
+                                className={styles.barraVidaInterna}
+                                style={{width: `${heroi.vida > 0 ? heroi.vida : 0}%`}}
+                            ></div>
+                        </div>
+                        <span className={styles.vidaNumerica}>HP: {heroi.vida > 0 ? heroi.vida : 0}/100</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* Área Inferior: Log de Eventos e Menu de Ações */}
+            <div className={styles.areaInteracao}>
+                {/* Log de Eventos */}
+                <div className={styles.logBatalha}>
+                    <p>{log}</p>
+                </div>
+
+                {/* Menu de Ações */}
+                <div className={styles.menuAcoes}>
+                    {gameOver ? (
+                        <div className={styles.mensagemFinal}>
+                            {vencedor === "heroi" ? (
+                                <h2>Você venceu!</h2>
+                            ) : (
+                                <h2>Você perdeu!</h2>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            <p className={styles.promptAcao}>O que {heroi.nome} deve fazer?</p>
+                            <div className={styles.botoesAcao}>
+                                <button onClick={() => handlerAcaoHeroi("atacar")} disabled={!turnoHeroi || gameOver}>Atacar</button>
+                                <button onClick={() => handlerAcaoHeroi("defender")} disabled={!turnoHeroi || gameOver}>Defender</button>
+                                <button onClick={() => handlerAcaoHeroi("usarPocao")} disabled={!turnoHeroi || gameOver}>Usar Poção</button>
+                                <button onClick={() => handlerAcaoHeroi("correr")} disabled={!turnoHeroi || gameOver}>Fugir</button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 }

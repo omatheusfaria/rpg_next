@@ -40,3 +40,10 @@ a {
     color-scheme: dark;
   }
 }
+
+@font-face {
+    font-family: 'Pokemon Classic'; /* Nome da fonte  */
+    src: url('/fonts/Pokemon-Classic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
