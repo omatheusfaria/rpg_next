@@ -14,11 +14,12 @@ export default function Home() {
                 <div className={styles.imagemVilao}>
                     {/* Exemplo: hitmontop.png para o vilão */}
                     <Image
-                        src="/personagens/Conkeldurr_XY.webp"
-                        alt={vilao.nome}
-                        width={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
-                        height={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
-                        priority // Opcional: para carregar mais rápido, útil para imagens acima da dobra
+                        src="https://img.pokemondb.net/sprites/black-white/anim/normal/conkeldurr.gif"
+                        alt={heroi.nome}
+                        width={400} // Aumentado para 250
+                        height={400} // Aumentado para 250
+                        unoptimized={true} // Use unoptimized para GIFs animados
+                        priority
                     />
                 </div>
 
@@ -38,12 +39,12 @@ export default function Home() {
 
                 {/* Imagem do Herói */}
                 <div className={styles.imagemHeroi}>
-                    {/* Exemplo: machoke.png para o herói */}
                     <Image
-                        src="/personagens/Machamp_XY_back.webp"
+                        src="https://img.pokemondb.net/sprites/black-white/anim/back-normal/machamp.gif"
                         alt={heroi.nome}
-                        width={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
-                        height={240} // Ajuste conforme o tamanho real da sua imagem ou o desejado
+                        width={400} // Aumentado para 250
+                        height={400} // Aumentado para 250
+                        unoptimized={true} // Use unoptimized para GIFs animados
                         priority
                     />
                 </div>
