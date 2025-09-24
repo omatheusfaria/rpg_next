@@ -1,18 +1,21 @@
-/* Container Principal: Define o fundo geral do jogo */
+/* Container Principal: Define o layout de coluna vertical */
 .containerPrincipal {
     display: flex;
     flex-direction: column;
     width: 100vw;
     height: 100vh;
-    /* Fundo que remete ao cenário do jogo */
-    background-color: #A0C0A0; /* Verde claro */
-    color: #333; /* Texto escuro para contraste */
+    background-color: #A0C0A0;
+    color: #333;
     font-family: 'Pokemon Classic', sans-serif;
     overflow: hidden;
     box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-/* Área Superior: Cenario de Combate */
+/* Área de Combate: Usando posicionamento absoluto para o layout de tela grande */
 .areaCombate {
     flex: 2;
     display: flex;
@@ -20,13 +23,12 @@
     align-items: center;
     padding: 20px;
     position: relative;
-    /* Cor do campo de batalha */
-    background-color: #88C088; /* Verde mais escuro */
-    border-bottom: 5px solid #669966; /* Linha de chão */
+    background: linear-gradient(to bottom, #A0C0A0 0%, #88C088 100%);
+    border-bottom: 5px solid #669966;
+    flex-wrap: wrap;
 }
 
-/* Painéis de Vida: Fundo claro e bordas escuras */
-
+/* Painel do Vilão: Superior direito */
 .painelVilao {
     position: absolute;
     top: 20px;
@@ -41,6 +43,7 @@
     z-index: 10;
 }
 
+/* Painel do Herói: Inferior esquerdo */
 .painelHeroi {
     position: absolute;
     bottom: 20px;
@@ -55,66 +58,88 @@
     z-index: 10;
 }
 
+/* Imagem do Vilão */
+.imagemVilao {
+    position: absolute;
+    top: 100px;
+    right: 300px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    height: auto;
+}
 
+/* Imagem do Herói */
+.imagemHeroi {
+    position: absolute;
+    bottom: 100px;
+    left: 300px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 250px;
+    height: auto;
+}
 
-/* Informações do Personagem */
+/* Resto do CSS (Sem alterações, apenas garantindo que as classes estão todas aqui) */
 .infoPersonagem {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-
 .nomePersonagem {
     font-size: 1.1em;
     font-weight: bold;
     color: #333;
     text-transform: uppercase;
 }
-
-/* Barras de Vida: Cores mais vivas */
 .barraVidaExterna {
     width: 100%;
     height: 12px;
-    background-color: #E0E0E0; /* Cor do fundo da barra de vida */
+    background-color: #E0E0E0;
     border: 1px solid #777;
     border-radius: 3px;
     overflow: hidden;
 }
-
 .barraVidaInterna {
     height: 100%;
-    background-color: #4CAF50; /* Verde para vida */
+    background-color: #4CAF50;
     transition: width 0.5s ease-in-out;
 }
-
 .vidaNumerica {
     font-size: 0.9em;
     color: #555;
 }
-
-/* Imagens dos Personagens */
-.imagemVilao {
-    position: absolute;
-    top: 60px;
-    right: 250px;
-    z-index: 5;
+.imagemVilao img,
+.imagemHeroi img {
+    image-rendering: pixelated;
+    width: 100%; /* Permite que a imagem preencha o contêiner */
+    height: auto; /* Mantém a proporção da imagem */
+    max-width: 400px; /* Aumentado para o tamanho desejado */
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    -ms-user-drag: none;
+    user-drag: none;
 }
-
-.imagemHeroi {
+/* Estilo para as novas imagens de grama */
+.gramaVilao,
+.gramaHeroi {
     position: absolute;
-    bottom: 60px;
-    left: 250px;
-    z-index: 5;
+    z-index: -1;
+    bottom: 0px; /* Posição ajustada */
+    transform: scale(2.0);
 }
 
 /* Área de Interação (Log e Menu) */
 .areaInteracao {
     flex: 1;
     display: flex;
-    background-color: #F0F0F0; /* Fundo claro */
+    background-color: #F0F0F0;
     border-top: 5px solid #C0C0C0;
 }
-
 .logBatalha {
     flex: 2;
     background-color: #E8E8E8;
@@ -124,20 +149,17 @@
     max-height: 100%;
     box-sizing: border-box;
 }
-
 .logBatalha p {
     margin-bottom: 5px;
     font-size: 0.9em;
     color: #333;
 }
-
 .promptAcao {
     font-size: 1em;
     font-weight: bold;
     margin-bottom: 10px;
     color: #333;
 }
-
 .menuAcoes {
     flex: 1;
     display: flex;
@@ -147,7 +169,6 @@
     padding: 15px;
     gap: 10px;
 }
-
 .botoesAcao {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -155,10 +176,9 @@
     width: 100%;
     max-width: 300px;
 }
-
 .botoesAcao button {
-    background-color: #E0E0E0; /* Fundo claro do botão */
-    color: #333; /* Cor do texto */
+    background-color: #E0E0E0;
+    color: #333;
     border: 1px solid #777;
     padding: 10px 15px;
     border-radius: 5px;
@@ -168,20 +188,180 @@
     text-transform: uppercase;
     font-family: 'Pokemon Classic', sans-serif;
 }
-
 .botoesAcao button:hover:not(:disabled) {
-    background-color: #D0D0D0; /* Efeito de hover */
+    background-color: #D0D0D0;
 }
-
 .botoesAcao button:disabled {
-    background-color: #B0B0B0; /* Cor do botão desabilitado */
+    background-color: #B0B0B0;
     color: #555;
     cursor: not-allowed;
 }
 
-/* Para o fundo das sprites, se você quiser */
-/* .imagemVilao img, .imagemHeroi img {
-  image-rendering: pixelated;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
-} */
+/* --- Media Query para telas menores --- */
+@media (max-width: 768px) {
+
+    .areaCombate {
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center; /* Centraliza o conteúdo verticalmente */
+
+        height: calc(100vh - 250px); /* Garante que a área de combate ocupa o espaço restante */
+
+        position: static; /* Volta para o posicionamento padrão */
+
+    }
+
+
+
+    .imagemVilao,
+
+    .imagemHeroi {
+
+        position: static; /* Remove o posicionamento absoluto */
+
+        margin: 10px auto;
+
+        width: 80%;
+
+        text-align: center;
+
+    }
+
+    .painelHeroi {
+        align-self: flex-start;
+        position: relative;
+        transform: translate(-40px, -200px);
+    }
+
+    .painelVilao { order: 1; }
+
+    .imagemVilao { order: 2; }
+
+    .imagemHeroi { order: 3; }
+
+    .painelHeroi { order: 4; }
+
+    .areaInteracao {
+
+        position: absolute; /* Posiciona o HUD no final da tela */
+
+        bottom: 0;
+
+        left: 0;
+
+        width: 100%;
+
+        height: 250px; /* Altura fixa do HUD */
+
+        flex-direction: column;
+
+        z-index: 100;
+
+    }
+
+
+    .logBatalha {
+
+        height: 100%;
+
+        border-right: none;
+
+        border-bottom: 2px solid #C0C0C0;
+
+        padding: 5px 15px 15px 15px;
+
+        transform: translateY(-80px);
+
+    }
+
+
+    .logBatalha p {
+
+        margin-bottom: 5px;
+
+        font-size: 0.9em;
+
+        color: #333;
+
+        padding-top: 15px; /* Adiciona o padding apenas no topo do parágrafo */
+
+    }
+
+
+    .menuAcoes {
+
+        height: 180px;
+
+        padding: 0; /* Remove o padding superior */
+
+    }
+
+
+    .menuAcoes p {
+
+        margin-bottom: 0px;
+
+        font-size: 0.9em;
+
+        color: #333;
+
+        padding-bottom: 10px;
+
+    }
+
+
+    .botoesAcao {
+
+        grid-template-columns: 1fr 1fr; /* Muda para 2 colunas */
+
+        gap: 8px;
+
+    }
+
+    .botoesAcao button {
+
+        padding: 5px 10px;
+
+        font-size: 0.8em;
+
+        margin-bottom: 15px;
+
+    }
+
+
+    /* Regra para tornar a grama responsiva */
+
+    .gramaVilao,
+
+    .gramaHeroi {
+
+        position: static; /* Remove o posicionamento absoluto */
+
+        width: 150px; /* Define uma largura máxima para a grama em mobile */
+
+        height: auto;
+
+        transform: scale(1.5); /* Remove o scale para que a imagem se ajuste ao tamanho */
+
+        margin-top: -50px; /* Ajusta a posição para ficar por baixo do Pokémon */
+
+    }
+
+
+    .gramaVilao {
+
+        margin: -70px;
+
+    }
+
+
+    .gramaHeroi {
+
+        transform: scale(2.0);
+
+    }
+
+}

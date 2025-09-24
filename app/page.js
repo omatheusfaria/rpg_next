@@ -1,7 +1,7 @@
 'use client'
 import styles from "./page.module.css";
 import useGameManager from "@/hooks/gameManager";
-import Image from "next/image"; // Importe o componente Image do Next.js
+import Image from "next/image";
 
 export default function Home() {
     const {heroi, vilao, log, turnoHeroi, handlerAcaoHeroi, gameOver, vencedor} = useGameManager();
@@ -12,14 +12,22 @@ export default function Home() {
             <div className={styles.areaCombate}>
                 {/* Imagem do Vilão */}
                 <div className={styles.imagemVilao}>
-                    {/* Exemplo: hitmontop.png para o vilão */}
                     <Image
                         src="https://img.pokemondb.net/sprites/black-white/anim/normal/conkeldurr.gif"
-                        alt={heroi.nome}
-                        width={400} // Aumentado para 250
-                        height={400} // Aumentado para 250
-                        unoptimized={true} // Use unoptimized para GIFs animados
+                        alt={vilao.nome}
+                        width={400}
+                        height={400}
+                        unoptimized={true}
                         priority
+                        draggable="false"
+                    />
+                    <Image
+                        src="/sprites/grama-vilao.png"
+                        alt="Plataforma de grama do vilão"
+                        width={200}
+                        height={50}
+                        draggable="false"
+                        className={styles.gramaVilao}
                     />
                 </div>
 
@@ -42,10 +50,19 @@ export default function Home() {
                     <Image
                         src="https://img.pokemondb.net/sprites/black-white/anim/back-normal/machamp.gif"
                         alt={heroi.nome}
-                        width={400} // Aumentado para 250
-                        height={400} // Aumentado para 250
-                        unoptimized={true} // Use unoptimized para GIFs animados
+                        width={400}
+                        height={400}
+                        unoptimized={true}
                         priority
+                        draggable="false"
+                    />
+                    <Image
+                        src="/sprites/grama-vilao.png"
+                        alt="Plataforma de grama do herói"
+                        width={200}
+                        height={50}
+                        draggable="false"
+                        className={styles.gramaHeroi}
                     />
                 </div>
 
@@ -66,12 +83,9 @@ export default function Home() {
 
             {/* Área Inferior: Log de Eventos e Menu de Ações */}
             <div className={styles.areaInteracao}>
-                {/* Log de Eventos */}
                 <div className={styles.logBatalha}>
                     <p>{log}</p>
                 </div>
-
-                {/* Menu de Ações */}
                 <div className={styles.menuAcoes}>
                     {gameOver ? (
                         <div className={styles.mensagemFinal}>
