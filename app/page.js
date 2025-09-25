@@ -5,7 +5,11 @@ import Image from "next/image";
 
 export default function Home() {
     const {heroi, vilao, log, turnoHeroi, handlerAcaoHeroi, gameOver, vencedor} = useGameManager();
-
+    const getBarraVidaCor = (vida) => {
+        if (vida > 50) return styles.verde;
+        if (vida > 20) return styles.amarelo;
+        return styles.vermelho;
+    };
     return (
         <div className={styles.containerPrincipal}>
             {/* Área Superior: Informações dos Combatentes */}
@@ -34,14 +38,22 @@ export default function Home() {
                 {/* Informações do Vilão */}
                 <div className={styles.painelVilao}>
                     <div className={styles.infoPersonagem}>
-                        <span className={styles.nomePersonagem}>{vilao.nome}</span>
-                        <div className={styles.barraVidaExterna}>
-                            <div
-                                className={styles.barraVidaInterna}
-                                style={{width: `${vilao.vida > 0 ? vilao.vida : 0}%`}}
-                            ></div>
+                        <div className={styles.nomePersonagem}>
+                            <span>{vilao.nome}</span>
+                            <span className={styles.levelPersonagem}>Lv50</span>
                         </div>
-                        <span className={styles.vidaNumerica}>HP: {vilao.vida > 0 ? vilao.vida : 0}/100</span>
+
+                        <div className={styles.barraVidaContainer}>
+                            <div className={styles.labelHP}>HP</div>
+                            <div className={styles.barraVidaExterna}>
+                                <div
+                                    className={`${styles.barraVidaInterna} ${getBarraVidaCor(vilao.vida)}`}
+                                    style={{width: `${vilao.vida > 0 ? vilao.vida : 0}%`}}
+                                ></div>
+                            </div>
+                        </div>
+
+                        <span className={styles.vidaNumerica}>{vilao.vida > 0 ? vilao.vida : 0}/100</span>
                     </div>
                 </div>
 
@@ -69,14 +81,22 @@ export default function Home() {
                 {/* Informações do Herói */}
                 <div className={styles.painelHeroi}>
                     <div className={styles.infoPersonagem}>
-                        <span className={styles.nomePersonagem}>{heroi.nome}</span>
-                        <div className={styles.barraVidaExterna}>
-                            <div
-                                className={styles.barraVidaInterna}
-                                style={{width: `${heroi.vida > 0 ? heroi.vida : 0}%`}}
-                            ></div>
+                        <div className={styles.nomePersonagem}>
+                            <span>{heroi.nome}</span>
+                            <span className={styles.levelPersonagem}>Lv50</span>
                         </div>
-                        <span className={styles.vidaNumerica}>HP: {heroi.vida > 0 ? heroi.vida : 0}/100</span>
+
+                        <div className={styles.barraVidaContainer}>
+                            <div className={styles.labelHP}>HP</div>
+                            <div className={styles.barraVidaExterna}>
+                                <div
+                                    className={`${styles.barraVidaInterna} ${getBarraVidaCor(heroi.vida)}`}
+                                    style={{width: `${heroi.vida > 0 ? heroi.vida : 0}%`}}
+                                ></div>
+                            </div>
+                        </div>
+
+                        <span className={styles.vidaNumerica}>{heroi.vida > 0 ? heroi.vida : 0}/100</span>
                     </div>
                 </div>
             </div>
@@ -99,10 +119,10 @@ export default function Home() {
                         <>
                             <p className={styles.promptAcao}>O que {heroi.nome} deve fazer?</p>
                             <div className={styles.botoesAcao}>
-                                <button onClick={() => handlerAcaoHeroi("atacar")} disabled={!turnoHeroi || gameOver}>Atacar</button>
-                                <button onClick={() => handlerAcaoHeroi("defender")} disabled={!turnoHeroi || gameOver}>Defender</button>
-                                <button onClick={() => handlerAcaoHeroi("usarPocao")} disabled={!turnoHeroi || gameOver}>Usar Poção</button>
-                                <button onClick={() => handlerAcaoHeroi("correr")} disabled={!turnoHeroi || gameOver}>Fugir</button>
+                                <button onClick={() => handlerAcaoHeroi("atacar")} disabled={!turnoHeroi || gameOver}>Fight</button>
+                                <button onClick={() => handlerAcaoHeroi("defender")} disabled={!turnoHeroi || gameOver}>Defense</button>
+                                <button onClick={() => handlerAcaoHeroi("usarPocao")} disabled={!turnoHeroi || gameOver}>Potion</button>
+                                <button onClick={() => handlerAcaoHeroi("correr")} disabled={!turnoHeroi || gameOver}>Run</button>
                             </div>
                         </>
                     )}

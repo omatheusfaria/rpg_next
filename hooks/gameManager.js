@@ -21,43 +21,17 @@ export default function useGameManager() {
         setLog(mensagem)
     }
 
-    const verificarFimDeJogo = (heroiVida, vilaoVida) => {
-        if (heroiVida <= 0) {
-            setVencedor("vilao")
-            setGameOver(true)
-            adicionarLog(`${vilao.nome} venceu a batalha!`)
-            return true;
-        } else if (vilaoVida <= 0) {
-            setVencedor("heroi")
-            setGameOver(true)
-            adicionarLog(`${heroi.nome} venceu a batalha!`)
-            return true;
-        }
-        return false;
-    }
-
     const modificarVida = (alvo, dano) => {
-        let novaVida = 0
-
-        if (alvo === "heroi") {
-            setHeroi(prev => {
-                novaVida = Math.min(100, Math.max(0, prev.vida - dano))
-                return { ...prev, vida: novaVida }
-            })
-        } else {
-            setVilao(prev => {
-                novaVida = Math.min(100, Math.max(0, prev.vida - dano))
-                return { ...prev, vida: novaVida }
-            })
-        }
-
-        return novaVida
+        const setter = alvo === "heroi" ? setHeroi : setVilao
+        setter(prev => {
+            const novaVida = Math.min(100, Math.max(0, prev.vida - dano))
+            return { ...prev, vida: novaVida }
+        })
     }
 
-    // Ações do herói: Simplificado
     const acoesHeroi = {
         atacar: () => {
-            let danoFinal = 80;
+            let danoFinal = 10;
             if (vilaoDefendendo) {
                 danoFinal = Math.round(danoFinal / 2);
                 adicionarLog(`${vilao.nome} se defendeu, o dano foi reduzido pela metade!`);
@@ -65,99 +39,99 @@ export default function useGameManager() {
             }
             modificarVida("vilao", danoFinal)
             adicionarLog(`${heroi.nome} atacou ${vilao.nome} e causou ${danoFinal} de dano!`)
-            return verificarFimDeJogo(heroi.vida, vilao.vida);
+            if (vilao.vida - danoFinal <= 0) {
+                setGameOver(true)
+                setVencedor("heroi")
+                adicionarLog(`${heroi.nome} venceu a batalha!`)
+                return true
+            }
         },
 
         defender: () => {
             setHeroiDefendendo(true)
             adicionarLog(`${heroi.nome} assumiu uma postura defensiva!`)
-            return false;
         },
 
         usarPocao: () => {
             modificarVida("heroi", -20)
             adicionarLog(`${heroi.nome} usou poção e regenerou 20 de vida!`)
-            return verificarFimDeJogo(heroi.vida, vilao.vida);
         },
 
         correr: () => {
             adicionarLog(`${heroi.nome} tentou fugir!`)
             setVencedor("vilao")
             setGameOver(true)
-            return true;
+            return true
         }
     }
 
-    const processarTurnoVilao = () => {
-        if (gameOver || vilao.vida <= 0) {
-            return;
-        }
+    const handlerAcaoVilao = () => {
+        if(gameOver) return
 
         const acoes = ["atacar", "defender", "usarPocao", "furia"]
         const acaoAleatoria = acoes[Math.floor(Math.random() * acoes.length)]
 
         let danoFinal = danoVilao
-        if (heroiDefendendo) {
-            danoFinal = Math.round(danoFinal / 2)
-            adicionarLog(`${heroi.nome} se defendeu, o dano foi reduzido pela metade!`)
-            setHeroiDefendendo(false)
-        }
-
-        let jogoAcabou = false;
 
         switch (acaoAleatoria) {
-            case "atacar": {
+            case "atacar":
+                if (heroiDefendendo) {
+                    danoFinal = Math.round(danoFinal / 2)
+                    adicionarLog(`${heroi.nome} se defendeu, o dano foi reduzido pela metade!`)
+                    setHeroiDefendendo(false)
+                }
                 modificarVida("heroi", danoFinal)
                 if (vilaoEmFuria) {
                     adicionarLog(`${vilao.nome} atacou furiosamente ${heroi.nome} e causou ${danoFinal} de dano!`)
                 } else {
                     adicionarLog(`${vilao.nome} atacou ${heroi.nome} e causou ${danoFinal} de dano!`)
                 }
-                jogoAcabou = verificarFimDeJogo(heroi.vida, vilao.vida)
+                if (heroi.vida - danoFinal <= 0) {
+                    setGameOver(true)
+                    setVencedor("vilao")
+                    adicionarLog(`${heroi.nome} venceu a batalha!`)
+                }
                 break
-            }
-            case "defender": {
+            case "defender":
                 setVilaoDefendendo(true)
                 adicionarLog(`${vilao.nome} assumiu uma postura defensiva!`)
-                jogoAcabou = verificarFimDeJogo(heroi.vida, vilao.vida)
                 break
-            }
-            case "usarPocao": {
+            case "usarPocao":
                 modificarVida("vilao", -10)
                 adicionarLog(`${vilao.nome} usou poção e regenerou 10 de vida!`)
-                jogoAcabou = verificarFimDeJogo(heroi.vida, vilao.vida)
                 break
-            }
-            case "furia": {
+            case "furia":
                 if (danoVilao === 10) {
                     setDanoVilao(danoVilao * 2)
                     setVilaoEmFuria(true)
                     adicionarLog(`${vilao.nome} entrou em um estado de FÚRIA! Seu dano dobrou!`)
                 } else {
+                    if (heroiDefendendo) {
+                        danoFinal = Math.round(danoFinal / 2)
+                        adicionarLog(`${heroi.nome} se defendeu, o dano foi reduzido pela metade!`)
+                    }
                     modificarVida("heroi", danoFinal)
                     adicionarLog(`${vilao.nome} atacou furiosamente ${heroi.nome} e causou ${danoFinal} de dano!`)
-                    jogoAcabou = verificarFimDeJogo(heroi.vida, vilao.vida)
+                }
+                if (heroi.vida - danoFinal <= 0) {
+                    setGameOver(true)
+                    setVencedor("vilao")
+                    adicionarLog(`${heroi.nome} venceu a batalha!`)
                 }
                 break
-            }
         }
-
-        if (!jogoAcabou) {
-            setTurnoHeroi(true);
-        }
+        setTurnoHeroi(true)
     }
 
     const handlerAcaoHeroi = (acao) => {
         if (!turnoHeroi || gameOver) return
 
-        setTurnoHeroi(false);
         const jogoAcabou = acoesHeroi[acao]?.()
-        console.log(jogoAcabou)
-        setTimeout(() => {
-            if (!jogoAcabou) {
-            processarTurnoVilao()
-            }
-        }, 3000)
+        if (!jogoAcabou) {
+            setTimeout(() => {
+                handlerAcaoVilao()
+            }, 2000)
+        }
     }
 
     return {
