@@ -1,5 +1,5 @@
 'use client'
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 export default function useGameManager() {
     const heroiInicial = {vida: 100, nome: "Machamp"}
@@ -16,6 +16,37 @@ export default function useGameManager() {
     const [gameOver, setGameOver] = useState(false)
     const [vencedor, setVencedor] = useState(null)
 
+    useEffect(() => {
+        if (gameOver) return;
+
+        if (heroi.vida <= 0) {
+            setGameOver(true);
+            setVencedor("vilao");
+        } else if (vilao.vida <= 0) {
+            setGameOver(true);
+            setVencedor("heroi");
+        }
+    }, [heroi.vida, vilao.vida, gameOver]);
+
+    useEffect(() => {
+        if (gameOver) {
+            setTurnoHeroi(false);
+            if (vencedor === "heroi") {
+                adicionarLog(`${heroi.nome} venceu a batalha!`);
+            } else if (vencedor === "vilao") {
+                adicionarLog(`${vilao.nome} venceu a batalha!`);
+            }
+        }
+    }, [gameOver, vencedor, heroi.nome, vilao.nome]);
+
+    useEffect(() => {
+        if (!turnoHeroi && !gameOver) {
+            const timerId = setTimeout(() => {
+                handlerAcaoVilao();
+            }, 2000);
+            return () => clearTimeout(timerId);
+        }
+    }, [turnoHeroi, gameOver])
 
     const adicionarLog = (mensagem) => {
         setLog(mensagem)
@@ -31,7 +62,7 @@ export default function useGameManager() {
 
     const acoesHeroi = {
         atacar: () => {
-            let danoFinal = 10;
+            let danoFinal = 90;
             if (vilaoDefendendo) {
                 danoFinal = Math.round(danoFinal / 2);
                 adicionarLog(`${vilao.nome} se defendeu, o dano foi reduzido pela metade!`);
@@ -39,12 +70,6 @@ export default function useGameManager() {
             }
             modificarVida("vilao", danoFinal)
             adicionarLog(`${heroi.nome} atacou ${vilao.nome} e causou ${danoFinal} de dano!`)
-            if (vilao.vida - danoFinal <= 0) {
-                setGameOver(true)
-                setVencedor("heroi")
-                adicionarLog(`${heroi.nome} venceu a batalha!`)
-                return true
-            }
         },
 
         defender: () => {
@@ -66,7 +91,7 @@ export default function useGameManager() {
     }
 
     const handlerAcaoVilao = () => {
-        if(gameOver) return
+        if (gameOver) return;
 
         const acoes = ["atacar", "defender", "usarPocao", "furia"]
         const acaoAleatoria = acoes[Math.floor(Math.random() * acoes.length)]
@@ -85,11 +110,6 @@ export default function useGameManager() {
                     adicionarLog(`${vilao.nome} atacou furiosamente ${heroi.nome} e causou ${danoFinal} de dano!`)
                 } else {
                     adicionarLog(`${vilao.nome} atacou ${heroi.nome} e causou ${danoFinal} de dano!`)
-                }
-                if (heroi.vida - danoFinal <= 0) {
-                    setGameOver(true)
-                    setVencedor("vilao")
-                    adicionarLog(`${heroi.nome} venceu a batalha!`)
                 }
                 break
             case "defender":
@@ -113,25 +133,17 @@ export default function useGameManager() {
                     modificarVida("heroi", danoFinal)
                     adicionarLog(`${vilao.nome} atacou furiosamente ${heroi.nome} e causou ${danoFinal} de dano!`)
                 }
-                if (heroi.vida - danoFinal <= 0) {
-                    setGameOver(true)
-                    setVencedor("vilao")
-                    adicionarLog(`${heroi.nome} venceu a batalha!`)
-                }
                 break
         }
         setTurnoHeroi(true)
     }
 
     const handlerAcaoHeroi = (acao) => {
-        if (!turnoHeroi || gameOver) return
+        if (!turnoHeroi || gameOver) return;
 
-        const jogoAcabou = acoesHeroi[acao]?.()
-        if (!jogoAcabou) {
-            setTimeout(() => {
-                handlerAcaoVilao()
-            }, 2000)
-        }
+        acoesHeroi[acao]?.();
+
+        setTurnoHeroi(false);
     }
 
     return {
