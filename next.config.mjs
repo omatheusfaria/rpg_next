@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  basePath: '/portfolio',
-  assetPrefix: '/portfolio/',
+  basePath: '/rpg-next',
+  assetPrefix: '/rpg-next/',
   images: {
     unoptimized: true,
   },
