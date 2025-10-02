@@ -62,7 +62,7 @@ export default function useGameManager() {
 
     const acoesHeroi = {
         atacar: () => {
-            let danoFinal = 90;
+            let danoFinal = 10;
             if (vilaoDefendendo) {
                 danoFinal = Math.round(danoFinal / 2);
                 adicionarLog(`${vilao.nome} se defendeu, o dano foi reduzido pela metade!`);
